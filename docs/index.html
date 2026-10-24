@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LocalFlow — dettatura vocale privata per Mac</title>
+<meta name="description" content="Dettatura vocale per macOS 100% locale, in italiano e inglese. Private on-device voice dictation for Mac.">
+<style>
+  :root {
+    --bg: #fbfaf7; --fg: #1d1c1a; --muted: #6b675f; --line: #e6e2d9;
+    --accent: #3d5afe; --accent-fg: #fff; --card: #fff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #141412; --fg: #eeebe4; --muted: #a29d93; --line: #2c2a26; --accent: #8c9eff; --accent-fg: #0d0d0c; --card: #1c1b19; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 72px 16px 48px; }
+  h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.05; letter-spacing: -0.03em; margin: 0 0 16px; }
+  .lede { font-size: 1.2rem; color: var(--muted); max-width: 40em; margin: 0 0 28px; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+  .btn { display: inline-block; padding: 12px 22px; border-radius: 10px; background: var(--accent); color: var(--accent-fg); text-decoration: none; font-weight: 600; }
+  .btn.ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); }
+  .small { font-size: 0.9rem; color: var(--muted); }
+  .demo { margin: 48px 0; padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); font-size: 1rem; }
+  .demo .said { color: var(--muted); font-style: italic; }
+  .demo .typed { margin-top: 10px; font-weight: 500; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 24px 0 56px; }
+  .card { border: 1px solid var(--line); border-radius: 12px; padding: 18px; background: var(--card); }
+  .card h3 { margin: 0 0 6px; font-size: 1rem; }
+  .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  h2 { font-size: 1.5rem; letter-spacing: -0.01em; margin: 0 0 8px; }
+  ol { padding-left: 1.2em; } li { margin: 6px 0; }
+  kbd { font: 0.85em ui-monospace, Menlo, monospace; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; background: var(--card); }
+  footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Parla. Il testo si scrive da solo.<br>Senza cloud.</h1>
+  <p class="lede">LocalFlow è la dettatura vocale per Mac che funziona interamente sul tuo computer. Tieni premuto <kbd>fn</kbd>, parla in italiano o in inglese, rilascia: il testo pulito e punteggiato compare dove si trova il cursore, in qualsiasi app.</p>
+  <div class="cta">
+    <a class="btn" href="https://github.com/robertolanci-sudo/localflow/releases/latest">Scarica per Mac</a>
+    <a class="btn ghost" href="https://github.com/robertolanci-sudo/localflow">Codice sorgente</a>
+  </div>
+  <p class="small">Gratis e open source (MIT) · Apple Silicon e Intel · macOS 13 o successivo</p>
+
+  <div class="demo">
+    <div class="said">“ehm allora ci vediamo domani alle tre anzi no alle quattro, porta primo il contratto secondo la presentazione”</div>
+    <div class="typed">Ci vediamo domani alle 4. Porta:<br>1. Il contratto<br>2. La presentazione</div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h3>100% privato</h3><p>Audio e testo non lasciano mai il Mac. Riconoscimento vocale con whisper.cpp, pulizia con un LLM locale tramite Ollama.</p></div>
+    <div class="card"><h3>Veloce</h3><p>Trascrive mentre parli e usa l'LLM solo quando serve: il testo arriva subito dopo il rilascio.</p></div>
+    <div class="card"><h3>Italiano e inglese</h3><p>Riconosce la lingua da solo, anche mescolata. Traduzione facoltativa del risultato.</p></div>
+    <div class="card"><h3>Pulizia intelligente</h3><p>Toglie “ehm” e “cioè”, applica i tuoi “anzi”, crea elenchi, scrive bene numeri e date.</p></div>
+    <div class="card"><h3>Tono per ogni app</h3><p>Formale nelle email, informale nelle chat. Legge il contesto attorno al cursore.</p></div>
+    <div class="card"><h3>Comandi e azioni rapide</h3><p>Seleziona un testo e di' “rendilo più gentile”, oppure <kbd>⌃⌥1…9</kbd> per rifinire, tradurre, accorciare.</p></div>
+    <div class="card"><h3>Trascrivi file</h3><p>Registrazioni, riunioni e vocali: trascrizione con timestamp, riassunto e cose da fare.</p></div>
+    <div class="card"><h3>Impara da te</h3><p>Dizionario personale che si aggiorna con le tue correzioni, snippet vocali, cronologia.</p></div>
+  </div>
+
+  <h2>Installazione</h2>
+  <ol>
+    <li>Scarica il DMG e trascina LocalFlow in Applicazioni.</li>
+    <li>Al primo avvio macOS la blocca perché non è notarizzata da Apple: Impostazioni di Sistema › Privacy e sicurezza › <b>Apri comunque</b> (su macOS 13–14: tasto destro › Apri).</li>
+    <li>Segui la configurazione guidata: scarica il modello vocale e concedi Microfono e Accessibilità.</li>
+  </ol>
+
+  <footer>
+    <p><b>English</b> — LocalFlow is private, on-device voice dictation for macOS in Italian and English. Hold <kbd>fn</kbd>, speak, release, and clean text is typed into any app. Nothing leaves your Mac. <a href="https://github.com/robertolanci-sudo/localflow/releases/latest">Download</a>.</p>
+    <p>MIT License · Built on whisper.cpp and Ollama.</p>
+  </footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,50 @@
+LocalFlow — dettatura vocale locale per Mac (italiano / English)
+================================================================
+
+Funziona su Mac con Apple Silicon (M1, M2, M3, M4…) e su Mac Intel, con macOS 13 Ventura o successivo.
+Tutto gira sul tuo Mac: audio e testo non vengono mai inviati su internet.
+(La connessione serve solo al primo avvio, per scaricare il modello vocale.)
+
+
+INSTALLAZIONE
+-------------
+1. Trascina "LocalFlow" nella cartella "Applications".
+2. Apri LocalFlow dalla cartella Applicazioni.
+
+   L'app non è firmata da Apple, quindi la prima volta macOS la blocca:
+   - macOS 15 Sequoia o successivo: chiudi l'avviso, poi vai in
+     Impostazioni di Sistema › Privacy e sicurezza, scorri in basso e premi "Apri comunque".
+   - macOS 13–14: tasto destro (o ctrl+clic) sull'app › Apri › Apri.
+
+3. Segui la configurazione guidata:
+   - scarica il modello vocale (consigliato quello proposto per il tuo Mac);
+   - consenti Microfono e Accessibilità;
+   - facoltativo: installa Ollama (https://ollama.com) e un modello per la pulizia
+     intelligente del testo (intercalari, "anzi…", elenchi, toni, modalità comando, riassunti).
+
+4. Impostazioni di Sistema › Tastiera › "Premi il tasto 🌐 per" → "Non fare nulla".
+
+
+USO
+---
+- Tieni premuto fn, parla, rilascia: il testo viene scritto dove si trova il cursore.
+- Doppio tocco su fn: mani libere (tocca di nuovo per finire). Esc annulla.
+- fn + ctrl: modalità comando (seleziona del testo e di' cosa farne).
+- ctrl+option+1…9: azioni rapide sul testo selezionato (rifinisci, formale, elenco, traduci…).
+- ctrl+option+S: note rapide.
+- ctrl+option+V: incolla l'ultima trascrizione.
+- ctrl+option+F: trascrivi file audio/video (o trascinali sulla barra in basso).
+- L'icona a forma d'onda nella barra dei menu apre impostazioni, dizionario, snippet e cronologia.
+
+File opus/ogg (vocali WhatsApp): serve ffmpeg  →  brew install ffmpeg
+
+Mac Intel: scegli il modello vocale "Veloce" e il modello LLM da 3b, per avere tempi di risposta accettabili.
+
+
+DISINSTALLAZIONE
+----------------
+Elimina LocalFlow da Applicazioni e la cartella
+~/Library/Application Support/LocalFlow (modelli, impostazioni e cronologia).
+
+Aggiornamenti: LocalFlow controlla una volta al giorno se c'è una nuova versione
+(menu › Controlla aggiornamenti…). Si può disattivare in Impostazioni › Generale.

@@ -40,6 +40,14 @@ struct GeneralTab: View {
     var onFixIssue: (HealthIssue) -> Void
     @ObservedObject private var health = HealthMonitor.shared
     @State private var models: [String] = []
+    @StateObject private var puller = OllamaPuller()
+    private static let downloadable: [(name: String, size: String)] = [
+        ("qwen2.5:1.5b", "1 GB"), ("qwen2.5:3b", "2 GB"), ("qwen2.5:7b", "4.7 GB"), ("qwen2.5:14b", "9 GB"),
+    ]
+    /// Embedding models can't chat: keep them out of the picker.
+    private static func chatModels(_ names: [String]?) -> [String] {
+        (names ?? []).filter { !$0.localizedCaseInsensitiveContains("embed") }
+    }
     @State private var axTrusted = Paster.accessibilityTrusted
     @State private var microphones: [AudioInputDevice] = []
     @State private var launchAtLogin = LoginItem.isEnabled
@@ -117,7 +125,24 @@ struct GeneralTab: View {
                     if !models.isEmpty {
                         Menu(L("Installati", "Installed")) {
                             ForEach(models, id: \.self) { m in Button(m) { store.s.ollamaModel = m } }
-                        }.frame(width: 120)
+                        }.frame(width: 110)
+                    }
+                    Menu(L("Scarica", "Download")) {
+                        ForEach(Self.downloadable.filter { !models.contains($0.name) }, id: \.name) { m in
+                            Button("\(m.name)  (\(m.size))") {
+                                puller.pull(m.name) { ok in
+                                    if ok { store.s.ollamaModel = m.name }
+                                    LLMClient().availableModels { models = Self.chatModels($0) }
+                                }
+                            }
+                        }
+                    }.frame(width: 100).disabled(puller.running)
+                }
+                if puller.running || !puller.status.isEmpty {
+                    HStack {
+                        if puller.running { ProgressView(value: puller.progress).frame(maxWidth: 200) }
+                        Text(puller.running ? "\(Int(puller.progress * 100))% — \(puller.status)" : puller.status)
+                            .font(.caption).foregroundColor(.secondary)
                     }
                 }
                 TextField("Ollama URL", text: $store.s.ollamaURL)
@@ -180,7 +205,7 @@ struct GeneralTab: View {
             axTrusted = Paster.accessibilityTrusted
             microphones = AudioDevices.inputs()
             launchAtLogin = LoginItem.isEnabled
-            LLMClient().availableModels { models = $0 ?? [] }
+            LLMClient().availableModels { models = Self.chatModels($0) }
             health.check(forceOllama: true)
         }
     }

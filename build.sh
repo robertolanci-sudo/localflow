@@ -25,7 +25,7 @@ if [ ! -x vendor/bin/whisper-server ]; then
 fi
 
 APP=build/LocalFlow.app
-VERSION="1.2"
+VERSION="1.2.1"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources/bin" "$APP/Contents/Resources/Licenses"
 cp build/LocalFlow "$APP/Contents/MacOS/LocalFlow"

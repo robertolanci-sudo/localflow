@@ -64,17 +64,27 @@ final class Transcriber {
         var args = ["-m", model, "--host", "127.0.0.1", "--port", "\(settings.whisperPort)",
                     "-l", "auto", "-nt", "-t", "\(threads)"]
         if let vad = Transcriber.findVADModel() { args += ["--vad", "-vm", vad] }
+        // Metal is unreliable on Intel Macs (crash at init on many GPUs): use the CPU there,
+        // and anywhere the GPU path already crashed at startup.
+        let cpuOnly = !SystemInfo.isAppleSilicon || UserDefaults.standard.bool(forKey: "whisperCPUOnly")
+        if cpuOnly { args += ["-ng", "-nfa"] }
         let p = Process()
         p.executableURL = URL(fileURLWithPath: bin)
         p.arguments = args
         p.standardOutput = FileHandle.nullDevice
-        p.standardError = FileHandle.nullDevice
-        p.terminationHandler = { [weak self] _ in
+        p.standardError = Transcriber.logHandle()
+        let launched = Date()
+        p.terminationHandler = { [weak self] proc in
             DispatchQueue.main.async {
-                guard let self else { return }
+                guard let self, proc === self.process else { return }
                 self.isReady = false
                 self.isStarting = false
-                self.onStatusChange?(L("Server whisper terminato", "Whisper server stopped"))
+                if !cpuOnly, Date().timeIntervalSince(launched) < 60 {
+                    UserDefaults.standard.set(true, forKey: "whisperCPUOnly")
+                    self.onStatusChange?(L("GPU non compatibile, riavvio whisper su CPU…", "GPU not supported, restarting whisper on CPU…"))
+                } else {
+                    self.onStatusChange?(L("Server whisper terminato (log: \(Transcriber.logURL.path))", "Whisper server stopped (log: \(Transcriber.logURL.path))"))
+                }
                 self.restartAfterCrash()
             }
         }
@@ -82,7 +92,7 @@ final class Transcriber {
             try p.run()
             process = p
             onStatusChange?(L("Caricamento modello vocale…", "Loading speech model…"))
-            waitUntilReady(attempts: 120)
+            waitUntilReady(attempts: 240)
         } catch {
             onStatusChange?("whisper-server: \(error.localizedDescription)")
         }
@@ -109,6 +119,16 @@ final class Transcriber {
     }
 
     /// Restarts a crashed server, at most 3 times in 5 minutes to avoid a crash loop.
+    static let logURL = FileManager.default.homeDirectoryForCurrentUser
+        .appendingPathComponent("Library/Logs/LocalFlow/whisper-server.log")
+
+    /// whisper-server stderr goes to ~/Library/Logs/LocalFlow (truncated at each start) for diagnostics.
+    static func logHandle() -> FileHandle {
+        try? FileManager.default.createDirectory(at: logURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        FileManager.default.createFile(atPath: logURL.path, contents: nil)
+        return (try? FileHandle(forWritingTo: logURL)) ?? FileHandle.nullDevice
+    }
+
     private func restartAfterCrash() {
         restartTimes = restartTimes.filter { Date().timeIntervalSince($0) < 300 }
         guard restartTimes.count < 3 else { return }
